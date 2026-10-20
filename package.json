@@ -1,0 +1,70 @@
+{
+  "name": "promptcheck",
+  "version": "0.1.0",
+  "description": "Lint your LLM prompt templates. Catches unclosed {{tags}} and {% blocks %}, undefined or misspelled variables, unbalanced <xml> sections, leaked API keys, leftover [insert here] text and more. Mustache, Handlebars, Jinja, f-string and ${js} syntax. CLI and library, zero dependencies.",
+  "keywords": [
+    "prompt",
+    "prompts",
+    "prompt-engineering",
+    "lint",
+    "linter",
+    "llm",
+    "template",
+    "mustache",
+    "handlebars",
+    "jinja",
+    "langchain",
+    "prompty",
+    "openai",
+    "anthropic",
+    "claude",
+    "cli",
+    "ci"
+  ],
+  "homepage": "https://github.com/acus9345/promptcheck#readme",
+  "bugs": {
+    "url": "https://github.com/acus9345/promptcheck/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/acus9345/promptcheck.git"
+  },
+  "license": "MIT",
+  "author": "acus9345 <acus9345@gmail.com>",
+  "type": "module",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "default": "./dist/index.js"
+    },
+    "./package.json": "./package.json"
+  },
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "files": [
+    "dist",
+    "README.md",
+    "CHANGELOG.md",
+    "LICENSE"
+  ],
+  "sideEffects": false,
+  "engines": {
+    "node": ">=20"
+  },
+  "scripts": {
+    "clean": "node -e \"require('node:fs').rmSync('dist',{recursive:true,force:true})\"",
+    "build": "npm run clean && tsc -p tsconfig.build.json",
+    "prelint": "npm run build",
+    "lint": "tsc -p tsconfig.json",
+    "pretest": "npm run build",
+    "test": "node --test \"test/*.test.ts\"",
+    "prepack": "npm run build"
+  },
+  "devDependencies": {
+    "@types/node": "^24.19.2",
+    "typescript": "^7.0.2"
+  },
+  "bin": {
+    "promptcheck": "dist/cli.js"
+  }
+}
