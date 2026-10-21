@@ -72,7 +72,7 @@ export function formatGithub(results: readonly FileResult[]): string {
         `col=${d.column}`,
         `endLine=${d.endLine}`,
         `endColumn=${d.endColumn}`,
-        `title=${escapeProperty(`promptcheck: ${d.rule}`)}`,
+        `title=${escapeProperty(`promptlinter: ${d.rule}`)}`,
       ];
       lines.push(`::${level} ${props.join(",")}::${escapeData(d.message)}`);
     }

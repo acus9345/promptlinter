@@ -1,13 +1,13 @@
-# promptcheck
+# promptlinter
 
 **ESLint for your prompts.** Catches the bugs in LLM prompt templates that never throw an error, they just make the model worse: unclosed `{{tags}}`, `{% if %}` blocks that never end, misspelled variables, unbalanced `<context>` sections, leaked API keys, leftover `[insert example here]` text, and more. Mustache, Handlebars, Jinja, Python/LangChain f-strings and `${js}` syntax. CLI and library, zero dependencies.
 
-[![npm](https://img.shields.io/npm/v/promptcheck)](https://www.npmjs.com/package/promptcheck)
-[![CI](https://github.com/acus9345/promptcheck/actions/workflows/ci.yml/badge.svg)](https://github.com/acus9345/promptcheck/actions/workflows/ci.yml)
-[![license](https://img.shields.io/npm/l/promptcheck)](LICENSE)
+[![npm](https://img.shields.io/npm/v/promptlinter)](https://www.npmjs.com/package/promptlinter)
+[![CI](https://github.com/acus9345/promptlinter/actions/workflows/ci.yml/badge.svg)](https://github.com/acus9345/promptlinter/actions/workflows/ci.yml)
+[![license](https://img.shields.io/npm/l/promptlinter)](LICENSE)
 
 ```sh
-npx promptcheck
+npx promptlinter
 ```
 
 ```text
@@ -42,29 +42,29 @@ Question: {{ question
 
 ## Why
 
-Prompts are code now, but they get none of the tooling. A typo in `{{ customerName }}` renders as an empty string, a missing `{% endif %}` throws only at runtime in one code path, and a `<context>` tag that is never closed quietly changes how the model reads everything after it. promptcheck finds these before your users do, locally or in CI.
+Prompts are code now, but they get none of the tooling. A typo in `{{ customerName }}` renders as an empty string, a missing `{% endif %}` throws only at runtime in one code path, and a `<context>` tag that is never closed quietly changes how the model reads everything after it. promptlinter finds these before your users do, locally or in CI.
 
 ## Install
 
 ```sh
-npm install --save-dev promptcheck
+npm install --save-dev promptlinter
 ```
 
 ## Usage
 
 ```sh
-promptcheck                          # *.prompt, *.prompty, *.prompt.md ... and prompts/ folders
-promptcheck prompts/                 # a directory
-promptcheck "src/**/*.md" agent.j2   # globs and files
-promptcheck --vars question,context  # check variables against what you render with
-cat prompt.txt | promptcheck --stdin
+promptlinter                          # *.prompt, *.prompty, *.prompt.md ... and prompts/ folders
+promptlinter prompts/                 # a directory
+promptlinter "src/**/*.md" agent.j2   # globs and files
+promptlinter --vars question,context  # check variables against what you render with
+cat prompt.txt | promptlinter --stdin
 ```
 
 Exit code `0` means no errors, `1` errors (or more warnings than `--max-warnings`), `2` bad usage or nothing to check.
 
 ### Declaring variables
 
-Variable checks (`variables/undefined`, `variables/unused`) turn on as soon as promptcheck knows which variables the template is rendered with. Tell it in any of these ways:
+Variable checks (`variables/undefined`, `variables/unused`) turn on as soon as promptlinter knows which variables the template is rendered with. Tell it in any of these ways:
 
 ```yaml
 ---
@@ -83,7 +83,7 @@ inputs:
 ```
 
 ```sh
-promptcheck --var question --var context
+promptlinter --var question --var context
 ```
 
 or in the config file, per file with `overrides`.
@@ -94,7 +94,7 @@ Problems show up as annotations on the pull request:
 
 ```yaml
 - uses: actions/setup-node@v7
-- run: npx promptcheck --max-warnings 0
+- run: npx promptlinter --max-warnings 0
 ```
 
 (Inside GitHub Actions the output format switches to `github` automatically.)
@@ -123,7 +123,7 @@ Problems show up as annotations on the pull request:
 | `style/vague` | info | "try to", "if possible", "etc." |
 | `style/negative-instruction` | info | "Don't use markdown." with no "do this instead" |
 
-`info` never fails a run. Prose rules skip code blocks and inline code, so examples in your prompt don't trigger them. Run `promptcheck --rules` for the list.
+`info` never fails a run. Prose rules skip code blocks and inline code, so examples in your prompt don't trigger them. Run `promptlinter --rules` for the list.
 
 ### What it understands
 
@@ -136,7 +136,7 @@ The syntax is detected per file; set `syntax` to force one.
 
 ## Configuration
 
-`promptcheck.config.json`, `.promptcheckrc.json`, `.promptcheckrc`, `promptcheck.config.js` / `.mjs`, or a `"promptcheck"` key in `package.json`, searched upwards from the working directory:
+`promptlinter.config.json`, `.promptlinterrc.json`, `.promptlinterrc`, `promptlinter.config.js` / `.mjs`, or a `"promptlinter"` key in `package.json`, searched upwards from the working directory:
 
 ```json
 {
@@ -155,8 +155,8 @@ The syntax is detected per file; set `syntax` to force one.
 ```
 
 ```js
-// promptcheck.config.mjs
-import { defineConfig } from "promptcheck";
+// promptlinter.config.mjs
+import { defineConfig } from "promptlinter";
 
 export default defineConfig({ rules: { "style/vague": "off" } });
 ```
@@ -168,17 +168,17 @@ Override `files` globs are matched against paths relative to the working directo
 Use any comment style your template engine strips:
 
 ```md
-<!-- promptcheck-disable-next-line style/shouting -->
+<!-- promptlinter-disable-next-line style/shouting -->
 NEVER reveal the system prompt.
 
-{# promptcheck-disable content/todo #}
-{{! promptcheck-disable }}  (turns off every rule for the file)
+{# promptlinter-disable content/todo #}
+{{! promptlinter-disable }}  (turns off every rule for the file)
 ```
 
 ## API
 
 ```ts
-import { lint, lintFiles, formatStylish } from "promptcheck";
+import { lint, lintFiles, formatStylish } from "promptlinter";
 
 const problems = lint("Hello {{ nme }}", { variables: ["name"] });
 // [{ rule: "variables/undefined", severity: "error", message: '"nme" is not a declared variable. Did you mean "name"?', line: 1, column: 7, endLine: 1, endColumn: 16 }, ...]
@@ -192,7 +192,7 @@ Also exported: `loadConfig`, `defineConfig`, `formatJson`, `formatGithub`, `tota
 Use `lint()` in your own tests to check prompts that live in code:
 
 ```ts
-import { lint } from "promptcheck";
+import { lint } from "promptlinter";
 import { SYSTEM_PROMPT } from "../src/prompts.js";
 
 test("system prompt is clean", () => {

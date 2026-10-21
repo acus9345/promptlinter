@@ -22,7 +22,7 @@ const write = (path: string, text: string) => {
 };
 
 before(() => {
-  dir = mkdtempSync(join(tmpdir(), "promptcheck-"));
+  dir = mkdtempSync(join(tmpdir(), "promptlinter-"));
   write("prompts/good.md", "Summarize {{ text }} in one paragraph.\n");
   write("prompts/bad.md", "Hello {{ name\n");
   write("agent.prompt", "You MUST be helpful to {{ user }}.\n");
@@ -93,7 +93,7 @@ describe("cli", () => {
     assert.equal(json[0].file, "prompts/bad.md");
     assert.equal(json[0].diagnostics[0].rule, "syntax/unclosed-tag");
     const gh = run(["prompts/bad.md", "--format", "github"], dir).stdout;
-    assert.match(gh, /^::error file=prompts\/bad\.md,line=1,col=7,endLine=1,endColumn=14,title=promptcheck%3A syntax\/unclosed-tag::/m);
+    assert.match(gh, /^::error file=prompts\/bad\.md,line=1,col=7,endLine=1,endColumn=14,title=promptlinter%3A syntax\/unclosed-tag::/m);
   });
 
   it("reads stdin", () => {
@@ -106,9 +106,9 @@ describe("cli", () => {
     const sub = join(dir, "configured");
     mkdirSync(sub, { recursive: true });
     writeFileSync(join(sub, "x.prompt"), "You MUST answer.\n");
-    writeFileSync(join(sub, ".promptcheckrc.json"), JSON.stringify({ rules: { "style/shouting": "error" } }));
+    writeFileSync(join(sub, ".promptlinterrc.json"), JSON.stringify({ rules: { "style/shouting": "error" } }));
     assert.equal(run(["x.prompt"], sub).code, 1);
-    writeFileSync(join(sub, ".promptcheckrc.json"), JSON.stringify({ rules: { "style/shoutin": "error" } }));
+    writeFileSync(join(sub, ".promptlinterrc.json"), JSON.stringify({ rules: { "style/shoutin": "error" } }));
     const bad = run(["x.prompt"], sub);
     assert.equal(bad.code, 2);
     assert.match(bad.stderr, /Unknown rule "style\/shoutin"/);

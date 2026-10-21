@@ -31,12 +31,12 @@ export interface Frontmatter {
 }
 
 /**
- * Reads a leading `---` YAML block. Only the parts promptcheck needs are
+ * Reads a leading `---` YAML block. Only the parts promptlinter needs are
  * parsed: `variables: [a, b]`, a `- a` list under `variables:` or
  * `input_variables:`, or the keys of a Prompty `inputs:` mapping.
  */
 export function readFrontmatter(text: string): Frontmatter {
-  const m = /^﻿?---[ \t]*\r?\n([\s\S]*?)\r?\n---[ \t]*(?:\r?\n|$)/.exec(text);
+  const m = /^\uFEFF?---[ \t]*\r?\n([\s\S]*?)\r?\n---[ \t]*(?:\r?\n|$)/.exec(text);
   if (!m) return { end: 0, variables: undefined };
   const lines = m[1]!.split(/\r?\n/);
   let variables: string[] | undefined;

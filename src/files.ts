@@ -1,7 +1,7 @@
 import { existsSync, readdirSync, statSync } from "node:fs";
 import { join, relative, resolve, sep } from "node:path";
 
-/** Files promptcheck looks at when no paths are given. */
+/** Files promptlinter looks at when no paths are given. */
 export const DEFAULT_INCLUDE: readonly string[] = [
   "**/*.prompt",
   "**/*.prompty",

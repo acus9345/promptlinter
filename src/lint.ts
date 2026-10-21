@@ -287,7 +287,7 @@ export function lint(text: string, options: LintOptions = {}): Diagnostic[] {
     const disabledFile = new Set<string>();
     const disabledLines = new Map<number, Set<string> | "all">();
     let allOff = false;
-    for (const m of text.matchAll(/promptcheck-disable(-next-line)?((?:[ \t,]+[a-z]+\/[a-z-]+)*)/g)) {
+    for (const m of text.matchAll(/promptlinter-disable(-next-line)?((?:[ \t,]+[a-z]+\/[a-z-]+)*)/g)) {
       const ids = m[2]!.split(/[\s,]+/).filter(Boolean);
       if (m[1]) disabledLines.set(positions.at(m.index!).line + 1, ids.length ? new Set(ids) : "all");
       else if (ids.length) ids.forEach((id) => disabledFile.add(id));
@@ -313,7 +313,7 @@ export function lint(text: string, options: LintOptions = {}): Diagnostic[] {
 /** Throws on unknown rule ids or severities, so config typos don't silently do nothing. */
 export function validateRules(rules: Readonly<Record<string, unknown>>): void {
   for (const [id, value] of Object.entries(rules)) {
-    if (!RULE_IDS.has(id)) throw new Error(`Unknown rule "${id}". Run "promptcheck --rules" to list them.`);
+    if (!RULE_IDS.has(id)) throw new Error(`Unknown rule "${id}". Run "promptlinter --rules" to list them.`);
     if (!["error", "warning", "info", "off"].includes(value as string)) throw new Error(`Rule "${id}" must be "error", "warning", "info" or "off", not ${JSON.stringify(value)}.`);
   }
 }

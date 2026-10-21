@@ -1,5 +1,5 @@
 {
-  "name": "promptcheck",
+  "name": "promptlinter",
   "version": "0.1.0",
   "description": "Lint your LLM prompt templates. Catches unclosed {{tags}} and {% blocks %}, undefined or misspelled variables, unbalanced <xml> sections, leaked API keys, leftover [insert here] text and more. Mustache, Handlebars, Jinja, f-string and ${js} syntax. CLI and library, zero dependencies.",
   "keywords": [
@@ -21,13 +21,13 @@
     "cli",
     "ci"
   ],
-  "homepage": "https://github.com/acus9345/promptcheck#readme",
+  "homepage": "https://github.com/acus9345/promptlinter#readme",
   "bugs": {
-    "url": "https://github.com/acus9345/promptcheck/issues"
+    "url": "https://github.com/acus9345/promptlinter/issues"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/acus9345/promptcheck.git"
+    "url": "git+https://github.com/acus9345/promptlinter.git"
   },
   "license": "MIT",
   "author": "acus9345 <acus9345@gmail.com>",
@@ -65,6 +65,6 @@
     "typescript": "^7.0.2"
   },
   "bin": {
-    "promptcheck": "dist/cli.js"
+    "promptlinter": "dist/cli.js"
   }
 }

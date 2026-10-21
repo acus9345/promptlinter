@@ -7,10 +7,10 @@ import { lintFiles, mergeOptions } from "./index.js";
 import { lint, type LintOptions } from "./lint.js";
 import { RULES } from "./rules.js";
 
-const HELP = `promptcheck: lint prompt templates
+const HELP = `promptlinter: lint prompt templates
 
 Usage
-  promptcheck [files, directories or globs...]
+  promptlinter [files, directories or globs...]
 
 With no paths, checks *.prompt, *.prompty, *.prompt.md (and friends) and files in prompts/ directories.
 
@@ -95,12 +95,12 @@ async function main(): Promise<number> {
     results = [{ file, diagnostics: lint(readFileSync(0, "utf8"), mergeOptions(optionsFor(config, file), overrides)) }];
   } else {
     const found = await lintFiles(positionals, { cwd, config, overrides });
-    for (const p of found.unmatched) process.stderr.write(`promptcheck: no prompt files match "${p}"\n`);
+    for (const p of found.unmatched) process.stderr.write(`promptlinter: no prompt files match "${p}"\n`);
     if (found.length === 0) {
       process.stderr.write(
         positionals.length
-          ? "promptcheck: nothing to check.\n"
-          : 'promptcheck: no prompt files found. Pass paths or globs, like "promptcheck prompts/" or "promptcheck \'src/**/*.md\'".\n',
+          ? "promptlinter: nothing to check.\n"
+          : 'promptlinter: no prompt files found. Pass paths or globs, like "promptlinter prompts/" or "promptlinter \'src/**/*.md\'".\n',
       );
       return 2;
     }
@@ -117,7 +117,7 @@ async function main(): Promise<number> {
   const t = totals(results);
   if (t.errors > 0) return 1;
   if (maxWarnings !== undefined && t.warnings > maxWarnings) {
-    process.stderr.write(`promptcheck: ${t.warnings} warnings, more than --max-warnings ${maxWarnings}.\n`);
+    process.stderr.write(`promptlinter: ${t.warnings} warnings, more than --max-warnings ${maxWarnings}.\n`);
     return 1;
   }
   return 0;
@@ -131,8 +131,8 @@ main().then(
   },
   (error: unknown) => {
     // Usage, config and unexpected errors all exit 2: nothing was linted.
-    process.stderr.write(`promptcheck: ${error instanceof Error ? error.message : String(error)}\n`);
-    if (error instanceof UsageError) process.stderr.write('Run "promptcheck --help" for usage.\n');
+    process.stderr.write(`promptlinter: ${error instanceof Error ? error.message : String(error)}\n`);
+    if (error instanceof UsageError) process.stderr.write('Run "promptlinter --help" for usage.\n');
     process.exitCode = 2;
   },
 );

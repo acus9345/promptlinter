@@ -1,4 +1,4 @@
-/** Placeholder syntaxes promptcheck understands. */
+/** Placeholder syntaxes promptlinter understands. */
 export type Syntax = "mustache" | "jinja" | "fstring" | "js";
 
 export type TagKind = "var" | "open" | "close" | "else" | "comment" | "partial" | "statement";

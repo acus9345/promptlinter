@@ -204,10 +204,10 @@ describe("configuration", () => {
   });
 
   it("honours disable comments", () => {
-    assert.deepEqual(rules("<!-- promptcheck-disable-next-line content/todo -->\nTODO later\nTODO now"), ["content/todo"]);
-    assert.deepEqual(rules("{# promptcheck-disable-next-line #}\nYou MUST. TODO"), []);
-    assert.deepEqual(rules("<!-- promptcheck-disable style/shouting -->\nYou MUST.\nIt is CRITICAL."), []);
-    assert.deepEqual(rules("<!-- promptcheck-disable -->\n{{ broken"), []);
+    assert.deepEqual(rules("<!-- promptlinter-disable-next-line content/todo -->\nTODO later\nTODO now"), ["content/todo"]);
+    assert.deepEqual(rules("{# promptlinter-disable-next-line #}\nYou MUST. TODO"), []);
+    assert.deepEqual(rules("<!-- promptlinter-disable style/shouting -->\nYou MUST.\nIt is CRITICAL."), []);
+    assert.deepEqual(rules("<!-- promptlinter-disable -->\n{{ broken"), []);
   });
 
   it("ignores everything with syntax: none", () => {

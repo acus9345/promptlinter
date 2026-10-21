@@ -20,11 +20,11 @@ export interface Config extends LintOptions {
 
 /** Config file names, in the order they are looked for. */
 export const CONFIG_FILES = [
-  "promptcheck.config.json",
-  ".promptcheckrc.json",
-  ".promptcheckrc",
-  "promptcheck.config.js",
-  "promptcheck.config.mjs",
+  "promptlinter.config.json",
+  ".promptlinterrc.json",
+  ".promptlinterrc",
+  "promptlinter.config.js",
+  "promptlinter.config.mjs",
 ] as const;
 
 /** Lets JS config files get type checking: `export default defineConfig({ ... })`. */
@@ -59,7 +59,7 @@ export async function loadConfig(cwd: string, explicit?: string): Promise<{ conf
     } catch (error) {
       throw new Error(`${path}: ${(error as Error).message}`);
     }
-    if (path.endsWith("package.json")) return check((parsed as { promptcheck?: unknown }).promptcheck ?? {}, path);
+    if (path.endsWith("package.json")) return check((parsed as { promptlinter?: unknown }).promptlinter ?? {}, path);
     return check(parsed, path);
   };
   if (explicit) {
@@ -76,7 +76,7 @@ export async function loadConfig(cwd: string, explicit?: string): Promise<{ conf
     const pkg = join(dir, "package.json");
     if (existsSync(pkg)) {
       try {
-        if ((JSON.parse(readFileSync(pkg, "utf8")) as { promptcheck?: unknown }).promptcheck) return { config: await load(pkg), path: pkg };
+        if ((JSON.parse(readFileSync(pkg, "utf8")) as { promptlinter?: unknown }).promptlinter) return { config: await load(pkg), path: pkg };
       } catch {
         // An unreadable package.json is not our problem.
       }
